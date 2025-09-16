@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Converter Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #canvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      max-width: 100%;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    select, button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Converter</h1>
+  <input type="file" id="upload" accept="image/*"><br>
+  <canvas id="canvas"></canvas>
+
+  <div class="controls">
+    <label for="format">Convert to:</label>
+    <select id="format">
+      <option value="image/jpeg">JPG</option>
+      <option value="image/png">PNG</option>
+      <option value="image/webp">WebP</option>
+    </select>
+    <button onclick="downloadImage()">💾 Download</button>
+  </div>
+
+  <script>
+    const upload = document.getElementById('upload');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+
+    upload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function downloadImage() {
+      const format = document.getElementById('format').value;
+      const link = document.createElement('a');
+      link.download = 'converted-image' + getExtension(format);
+      link.href = canvas.toDataURL(format, 1.0); // quality = 100%
+      link.click();
+    }
+
+    function getExtension(format) {
+      switch (format) {
+        case "image/jpeg": return ".jpg";
+        case "image/png": return ".png";
+        case "image/webp": return ".webp";
+        default: return ".png";
+      }
+    }
+  </script>
+</body>
+</html>
 
