@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Resizer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-6 shadow-md">
+    <h1 class="text-3xl font-bold text-center">Image Resizer</h1>
+    <p class="text-center mt-2">Resize images by width, height, or percentage</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto p-6">
+    
+    <!-- Upload -->
+    <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Upload Image</h2>
+      <input type="file" id="upload" accept="image/*" class="block w-full p-2 border rounded">
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden bg-white rounded-2xl p-6 shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Resize Options</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-600">Width (px)</label>
+          <input type="number" id="widthInput" class="w-full p-2 border rounded">
+        </div>
+        <div>
+          <label class="block text-gray-600">Height (px)</label>
+          <input type="number" id="heightInput" class="w-full p-2 border rounded">
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block text-gray-600">Scale (%)</label>
+        <input type="number" id="scaleInput" value="100" class="w-full p-2 border rounded">
+      </div>
+      <button id="resizeBtn" class="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Resize</button>
+    </div>
+
+    <!-- Preview -->
+    <div id="previewBox" class="hidden bg-white rounded-2xl p-6 shadow-md text-center">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Preview</h2>
+      <canvas id="canvas" class="mx-auto border rounded"></canvas>
+      <a id="downloadBtn" download="resized-image.png" class="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Download</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-10">
+    <a href="../index.html" class="text-blue-600 hover:underline">← Back to Tools</a>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const upload = document.getElementById("upload");
+    const controls = document.getElementById("controls");
+    const previewBox = document.getElementById("previewBox");
+    const widthInput = document.getElementById("widthInput");
+    const heightInput = document.getElementById("heightInput");
+    const scaleInput = document.getElementById("scaleInput");
+    const resizeBtn = document.getElementById("resizeBtn");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    let img = new Image();
+
+    // Upload image
+    upload.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img = new Image();
+        img.onload = () => {
+          controls.classList.remove("hidden");
+          previewBox.classList.remove("hidden");
+          widthInput.value = img.width;
+          heightInput.value = img.height;
+          drawImage(img.width, img.height);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Draw image on canvas
+    function drawImage(width, height) {
+      canvas.width = width;
+      canvas.height = height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, width, height);
+      downloadBtn.href = canvas.toDataURL("image/png");
+    }
+
+    // Resize button
+    resizeBtn.addEventListener("click", () => {
+      let newWidth = parseInt(widthInput.value);
+      let newHeight = parseInt(heightInput.value);
+      const scale = parseInt(scaleInput.value);
+
+      if (scale && scale !== 100) {
+        newWidth = (img.width * scale) / 100;
+        newHeight = (img.height * scale) / 100;
+      }
+
+      drawImage(newWidth, newHeight);
+    });
+  </script>
+</body>
+</html>
 
