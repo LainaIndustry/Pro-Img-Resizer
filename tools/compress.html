@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Compressor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Header -->
+  <header class="bg-green-600 text-white p-6 shadow-md">
+    <h1 class="text-3xl font-bold text-center">Image Compressor</h1>
+    <p class="text-center mt-2">Reduce image size with adjustable quality</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto p-6">
+    
+    <!-- Upload -->
+    <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Upload Image</h2>
+      <input type="file" id="upload" accept="image/*" class="block w-full p-2 border rounded">
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="hidden bg-white rounded-2xl p-6 shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Compression Options</h2>
+      <label for="qualityInput" class="block text-gray-600 mb-2">Quality: <span id="qualityValue">80</span>%</label>
+      <input type="range" id="qualityInput" min="1" max="100" value="80" class="w-full">
+      <button id="compressBtn" class="mt-6 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Compress</button>
+    </div>
+
+    <!-- Preview -->
+    <div id="previewBox" class="hidden bg-white rounded-2xl p-6 shadow-md text-center">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Preview</h2>
+      <canvas id="canvas" class="mx-auto border rounded"></canvas>
+      <div class="mt-4 text-gray-600">
+        <p>Original Size: <span id="originalSize">0</span> KB</p>
+        <p>Compressed Size: <span id="compressedSize">0</span> KB</p>
+      </div>
+      <a id="downloadBtn" download="compressed-image.jpg" class="mt-6 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Download</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-10">
+    <a href="../index.html" class="text-green-600 hover:underline">← Back to Tools</a>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const upload = document.getElementById("upload");
+    const controls = document.getElementById("controls");
+    const previewBox = document.getElementById("previewBox");
+    const qualityInput = document.getElementById("qualityInput");
+    const qualityValue = document.getElementById("qualityValue");
+    const compressBtn = document.getElementById("compressBtn");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const originalSizeEl = document.getElementById("originalSize");
+    const compressedSizeEl = document.getElementById("compressedSize");
+
+    let img = new Image();
+    let originalDataUrl = "";
+
+    // Upload image
+    upload.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img = new Image();
+        img.onload = () => {
+          controls.classList.remove("hidden");
+          previewBox.classList.remove("hidden");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          originalDataUrl = event.target.result;
+          originalSizeEl.textContent = Math.round(file.size / 1024);
+          downloadBtn.href = originalDataUrl;
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Update quality label
+    qualityInput.addEventListener("input", () => {
+      qualityValue.textContent = qualityInput.value;
+    });
+
+    // Compress button
+    compressBtn.addEventListener("click", () => {
+      const quality = qualityInput.value / 100;
+      const compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+
+      // Draw again for preview
+      const compressedImg = new Image();
+      compressedImg.onload = () => {
+        canvas.width = compressedImg.width;
+        canvas.height = compressedImg.height;
+        ctx.drawImage(compressedImg, 0, 0);
+      };
+      compressedImg.src = compressedDataUrl;
+
+      // Update sizes
+      const compressedSize = Math.round((compressedDataUrl.length * (3/4)) / 1024);
+      compressedSizeEl.textContent = compressedSize;
+
+      // Set download link
+      downloadBtn.href = compressedDataUrl;
+    });
+  </script>
+</body>
+</html>
 
