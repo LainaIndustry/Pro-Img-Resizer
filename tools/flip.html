@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip Image Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #canvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      max-width: 100%;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Flip Image</h1>
+  <input type="file" id="upload" accept="image/*"><br>
+  <canvas id="canvas"></canvas>
+
+  <div class="controls">
+    <button onclick="flip('horizontal')">↔ Flip Horizontal</button>
+    <button onclick="flip('vertical')">↕ Flip Vertical</button>
+    <button onclick="downloadImage()">💾 Download</button>
+  </div>
+
+  <script>
+    const upload = document.getElementById('upload');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+
+    upload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function flip(direction) {
+      if (!img.src) return;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.save();
+
+      if (direction === "horizontal") {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      } else if (direction === "vertical") {
+        ctx.translate(0, canvas.height);
+        ctx.scale(1, -1);
+      }
+
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+    }
+
+    function downloadImage() {
+      const link = document.createElement('a');
+      link.download = 'flipped-image.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  </script>
+</body>
+</html>
 
