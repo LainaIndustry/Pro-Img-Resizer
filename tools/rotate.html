@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate Image Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #canvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      max-width: 100%;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rotate Image</h1>
+  <input type="file" id="upload" accept="image/*"><br>
+  <canvas id="canvas"></canvas>
+  
+  <div class="controls">
+    <button onclick="rotate(-90)">⟲ Rotate Left</button>
+    <button onclick="rotate(90)">⟳ Rotate Right</button>
+    <button onclick="downloadImage()">💾 Download</button>
+  </div>
+
+  <script>
+    const upload = document.getElementById('upload');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+    let angle = 0;
+
+    upload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img.onload = () => {
+          angle = 0;
+          drawImage();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function drawImage() {
+      const radians = angle * Math.PI / 180;
+      const sin = Math.abs(Math.sin(radians));
+      const cos = Math.abs(Math.cos(radians));
+
+      const newWidth = img.width * cos + img.height * sin;
+      const newHeight = img.width * sin + img.height * cos;
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      ctx.clearRect(0, 0, newWidth, newHeight);
+      ctx.save();
+      ctx.translate(newWidth / 2, newHeight / 2);
+      ctx.rotate(radians);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.restore();
+    }
+
+    function rotate(deg) {
+      angle = (angle + deg) % 360;
+      drawImage();
+    }
+
+    function downloadImage() {
+      const link = document.createElement('a');
+      link.download = 'rotated-image.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  </script>
+</body>
+</html>
 
