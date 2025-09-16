@@ -1,1 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Enlarger Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #canvas {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      max-width: 100%;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    select, input, button {
+      padding: 8px 12px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Enlarger</h1>
+  <input type="file" id="upload" accept="image/*"><br>
+  <canvas id="canvas"></canvas>
+
+  <div class="controls">
+    <label for="scale">Upscale:</label>
+    <select id="scale" onchange="setCustom(false)">
+      <option value="2">2x</option>
+      <option value="3">3x</option>
+      <option value="4">4x</option>
+      <option value="custom">Custom Size</option>
+    </select>
+
+    <div id="customSize" style="display:none;">
+      <input type="number" id="width" placeholder="Width (px)">
+      <input type="number" id="height" placeholder="Height (px)">
+    </div>
+
+    <button onclick="enlarge()">🔍 Enlarge</button>
+    <button onclick="downloadImage()">💾 Download</button>
+  </div>
+
+  <script>
+    const upload = document.getElementById('upload');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+
+    upload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function setCustom(show) {
+      document.getElementById('customSize').style.display = show ? 'block' : 'none';
+    }
+
+    function enlarge() {
+      if (!img.src) return;
+
+      const scaleValue = document.getElementById('scale').value;
+      let newWidth, newHeight;
+
+      if (scaleValue === "custom") {
+        newWidth = parseInt(document.getElementById('width').value) || img.width;
+        newHeight = parseInt(document.getElementById('height').value) || img.height;
+      } else {
+        const scale = parseInt(scaleValue);
+        newWidth = img.width * scale;
+        newHeight = img.height * scale;
+      }
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+    }
+
+    function downloadImage() {
+      const link = document.createElement('a');
+      link.download = 'enlarged-image.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  </script>
+</body>
+</html>
 
