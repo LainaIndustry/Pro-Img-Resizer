@@ -1,99 +1,72 @@
+### colorpicker.html
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Picker Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
-    #canvas {
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      max-width: 100%;
-      cursor: crosshair;
-    }
-    .color-box {
-      display: inline-block;
-      width: 50px;
-      height: 50px;
-      border: 1px solid #000;
-      margin: 10px;
-      vertical-align: middle;
-    }
-    .color-info {
-      margin-top: 15px;
-      font-size: 18px;
-    }
-    button {
-      margin-left: 10px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Color Picker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Image Color Picker</h1>
-  <input type="file" id="upload" accept="image/*"><br>
-  <canvas id="canvas"></canvas>
+<body class="bg-gray-50 font-sans">
 
-  <div class="color-info">
-    <div class="color-box" id="colorBox"></div>
-    <span id="colorValue">Click on image to pick a color</span>
-    <button onclick="copyColor()">Copy HEX</button>
-  </div>
+  <!-- Header / Navigation -->
 
-  <script>
-    const upload = document.getElementById('upload');
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let img = new Image();
+  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
 
-    upload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+    <!-- Left Advertisement -->
+    <aside class="hidden lg:block w-1/12 mr-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-    canvas.addEventListener('click', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+    <!-- Tool Content -->
+    <section class="flex-1">
+      <!-- Hero Section -->
+      <div class="bg-white shadow rounded p-8 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Color Picker</h1>
+        <p class="mt-2 text-gray-700 text-lg">Pick and identify colors from images or screen with ease online.</p>
 
-      const pixel = ctx.getImageData(x, y, 1, 1).data;
-      const rgb = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-      const hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
+        <!-- Upload / Tool Action Area -->
+        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
+          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+        </div>
+      </div>
 
-      document.getElementById('colorBox').style.background = hex;
-      document.getElementById('colorValue').textContent = `${hex.toUpperCase()} | ${rgb}`;
-    });
+      <!-- Features / Benefits -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow p-4 rounded text-center">Accurate Color Detection</div>
+        <div class="bg-white shadow p-4 rounded text-center">Fast and Easy</div>
+        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
+        <div class="bg-white shadow p-4 rounded text-center">No Registration Required</div>
+        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
+      </div>
 
-    function rgbToHex(r, g, b) {
-      return "#" + [r, g, b].map(x => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
-      }).join('');
-    }
+      <!-- Related Tools -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
+          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+        </div>
+      </div>
+    </section>
 
-    function copyColor() {
-      const text = document.getElementById('colorValue').textContent.split(" | ")[0];
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-      });
-    }
-  </script>
+    <!-- Right Advertisement -->
+    <aside class="hidden lg:block w-1/12 ml-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
+
+  </main>
+
+  <!-- Footer -->
+
 </body>
 </html>
-
+```
