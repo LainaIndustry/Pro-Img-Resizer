@@ -3,82 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Image Resizer</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="assets/js/script.js"></script>
-
+  <title>Image Resizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans">
 
-  <!-- Header -->
-  <header class="bg-blue-600 text-white p-6 shadow-md">
-    <h1 class="text-3xl font-bold text-center">Image Tools Hub</h1>
-    <p class="text-center mt-2">Resize, Compress, Crop, Convert, and more — all in one place</p>
+  <!-- Header / Navigation -->
+  <header class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-blue-600">Image Resizer</div>
+      <nav class="hidden md:flex space-x-6 items-center">
+        <!-- Tools Dropdown -->
+        <div class="relative group">
+          <button class="hover:text-blue-600 font-semibold">Tools</button>
+          <div class="absolute hidden group-hover:block bg-white shadow-lg mt-2 rounded w-48">
+            <div class="px-4 py-2 border-b">Resize
+              <div class="mt-2 space-y-1">
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Image Resizer</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Bulk Resize</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Resize PNG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Resize JPG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Resize WebP</a>
+              </div>
+            </div>
+            <div class="px-4 py-2 border-b">Crop
+              <div class="mt-2 space-y-1">
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Crop Image</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Crop PNG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Crop WebP</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Crop JPG</a>
+              </div>
+            </div>
+            <div class="px-4 py-2 border-b">Compress
+              <div class="mt-2 space-y-1">
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Image Compressor</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Compress JPEG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">PNG Compressor</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">GIF Compressor</a>
+              </div>
+            </div>
+            <div class="px-4 py-2 border-b">Convert
+              <div class="mt-2 space-y-1">
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">JPG to PNG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">PNG to JPG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">WebP to JPG</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">SVG to PNG</a>
+              </div>
+            </div>
+            <div class="px-4 py-2">More
+              <div class="mt-2 space-y-1">
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Meme Generator</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Color Picker</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Rotate Image</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Flip Image</a>
+                <a href="#" class="block px-2 py-1 hover:bg-gray-100">Image Enlarger</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="hover:text-blue-600 font-semibold">Blog</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Tools Grid -->
-  <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-    
-    <!-- Example tool card -->
-    <a href="tools/resize.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Resizer</h2>
-      <p class="mt-2 text-gray-600">Resize images by width, height, or percentage.</p>
-    </a>
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
 
-    <a href="tools/compress.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Compressor</h2>
-      <p class="mt-2 text-gray-600">Reduce file size without losing much quality.</p>
-    </a>
+    <!-- Left Advertisement -->
+    <aside class="hidden lg:block w-1/12 mr-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-    <a href="tools/crop.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Cropper</h2>
-      <p class="mt-2 text-gray-600">Cut out the parts of an image you don’t need.</p>
-    </a>
+    <!-- Main Section -->
+    <section class="flex-1">
+      <!-- Hero Section -->
+      <div class="bg-white shadow rounded p-8 text-center">
+        <h1 class="text-4xl font-bold text-blue-600">Image Resizer</h1>
+        <p class="mt-2 text-gray-700 text-lg">Easily resize images online for free.</p>
 
-    <a href="tools/convert.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Format Converter</h2>
-      <p class="mt-2 text-gray-600">Convert JPG ⇄ PNG, WebP, SVG, HEIC, and more.</p>
-    </a>
+        <!-- Upload / Drag & Drop -->
+        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
+          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+        </div>
+      </div>
 
-    <a href="tools/rotate.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Rotator</h2>
-      <p class="mt-2 text-gray-600">Rotate images left, right, or custom angle.</p>
-    </a>
+      <!-- Features / Benefits -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow p-4 rounded text-center">Perfect Quality</div>
+        <div class="bg-white shadow p-4 rounded text-center">Lightning Fast</div>
+        <div class="bg-white shadow p-4 rounded text-center">Easy to Use</div>
+        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
+        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
+        <div class="bg-white shadow p-4 rounded text-center">Free, No Registration</div>
+      </div>
 
-    <a href="tools/flip.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Flipper</h2>
-      <p class="mt-2 text-gray-600">Flip images horizontally or vertically.</p>
-    </a>
+      <!-- Tools Section -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-6">All Tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Bulk Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Image Compressor</div>
+          <div class="bg-white shadow p-4 rounded text-center">JPG to PNG</div>
+          <div class="bg-white shadow p-4 rounded text-center">PNG to JPG</div>
+          <div class="bg-white shadow p-4 rounded text-center">WebP to JPG</div>
+          <div class="bg-white shadow p-4 rounded text-center">SVG to PNG</div>
+          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
+          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
+          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+        </div>
+      </div>
+    </section>
 
-    <a href="tools/enlarge.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Image Enlarger</h2>
-      <p class="mt-2 text-gray-600">Upscale images while maintaining quality.</p>
-    </a>
-
-    <a href="tools/colorpicker.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Color Picker</h2>
-      <p class="mt-2 text-gray-600">Pick and copy any color from your images.</p>
-    </a>
-
-    <a href="tools/meme.html" class="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
-      <h2 class="text-xl font-semibold text-blue-600">Meme Generator</h2>
-      <p class="mt-2 text-gray-600">Add text to images and create funny memes.</p>
-    </a>
+    <!-- Right Advertisement -->
+    <aside class="hidden lg:block w-1/12 ml-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
   </main>
 
   <!-- Footer -->
-    <!-- Footer -->
-  <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-10">
-    <p>© 2025 ProImgResizer. All rights reserved.</p>
-    <div class="mt-2 space-x-4">
-      <a href="about.html" class="hover:text-blue-600">About</a>
-      <a href="privacy.html" class="hover:text-blue-600">Privacy Policy</a>
-      <a href="terms.html" class="hover:text-blue-600">Terms</a>
-      <a href="contact.html" class="hover:text-blue-600">Contact</a>
+  <footer class="bg-white mt-10 py-6 text-center border-t">
+    <div class="space-x-4 mb-2">
+      <a href="#" class="text-gray-600 hover:text-blue-600">About</a>
+      <a href="#" class="text-gray-600 hover:text-blue-600">Privacy</a>
+      <a href="#" class="text-gray-600 hover:text-blue-600">Terms</a>
+      <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
     </div>
+    <p class="text-gray-500">© 2025 Image Resizer. All rights reserved.</p>
   </footer>
-</html>
 
+</body>
+</html>
