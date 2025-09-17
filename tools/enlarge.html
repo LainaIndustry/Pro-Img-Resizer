@@ -1,107 +1,72 @@
+### enlarge.html
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Enlarger Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
-    #canvas {
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      max-width: 100%;
-    }
-    .controls {
-      margin-top: 15px;
-    }
-    select, input, button {
-      padding: 8px 12px;
-      margin: 5px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Image Enlarger</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Image Enlarger</h1>
-  <input type="file" id="upload" accept="image/*"><br>
-  <canvas id="canvas"></canvas>
+<body class="bg-gray-50 font-sans">
 
-  <div class="controls">
-    <label for="scale">Upscale:</label>
-    <select id="scale" onchange="setCustom(false)">
-      <option value="2">2x</option>
-      <option value="3">3x</option>
-      <option value="4">4x</option>
-      <option value="custom">Custom Size</option>
-    </select>
+  <!-- Header / Navigation -->
 
-    <div id="customSize" style="display:none;">
-      <input type="number" id="width" placeholder="Width (px)">
-      <input type="number" id="height" placeholder="Height (px)">
-    </div>
+  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
 
-    <button onclick="enlarge()">🔍 Enlarge</button>
-    <button onclick="downloadImage()">💾 Download</button>
-  </div>
+    <!-- Left Advertisement -->
+    <aside class="hidden lg:block w-1/12 mr-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-  <script>
-    const upload = document.getElementById('upload');
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let img = new Image();
+    <!-- Tool Content -->
+    <section class="flex-1">
+      <!-- Hero Section -->
+      <div class="bg-white shadow rounded p-8 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Image Enlarger</h1>
+        <p class="mt-2 text-gray-700 text-lg">Upscale images online without losing quality. Ideal for printing and presentations.</p>
 
-    upload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+        <!-- Upload / Tool Action Area -->
+        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
+          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+        </div>
+      </div>
 
-    function setCustom(show) {
-      document.getElementById('customSize').style.display = show ? 'block' : 'none';
-    }
+      <!-- Features / Benefits -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow p-4 rounded text-center">High Quality Enlargement</div>
+        <div class="bg-white shadow p-4 rounded text-center">Fast and Easy</div>
+        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
+        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
+        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
+      </div>
 
-    function enlarge() {
-      if (!img.src) return;
+      <!-- Related Tools -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
+          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
+        </div>
+      </div>
+    </section>
 
-      const scaleValue = document.getElementById('scale').value;
-      let newWidth, newHeight;
+    <!-- Right Advertisement -->
+    <aside class="hidden lg:block w-1/12 ml-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-      if (scaleValue === "custom") {
-        newWidth = parseInt(document.getElementById('width').value) || img.width;
-        newHeight = parseInt(document.getElementById('height').value) || img.height;
-      } else {
-        const scale = parseInt(scaleValue);
-        newWidth = img.width * scale;
-        newHeight = img.height * scale;
-      }
+  </main>
 
-      canvas.width = newWidth;
-      canvas.height = newHeight;
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(img, 0, 0, newWidth, newHeight);
-    }
+  <!-- Footer -->
 
-    function downloadImage() {
-      const link = document.createElement('a');
-      link.download = 'enlarged-image.png';
-      link.href = canvas.toDataURL();
-      link.click();
-    }
-  </script>
 </body>
-</html>
-
+</html
+```
