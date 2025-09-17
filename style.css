@@ -1,245 +1,151 @@
-/* style.css — Global styling for Image Tools Hub
-   Works alongside Tailwind (if present) or as a standalone stylesheet.
-   Author: (you) • Minimal, responsive, accessible
-*/
+/* style.css */
 
-/* -------- Design tokens -------- */
-:root{
-  --bg: #f7fafc;            /* page background */
-  --card: #ffffff;          /* card background */
-  --muted: #6b7280;         /* muted text */
-  --brand: #2563eb;         /* primary / blue */
-  --brand-600: #1d4ed8;
-  --accent: #10b981;        /* green / action */
-  --danger: #ef4444;        /* error / alert */
-  --glass: rgba(255,255,255,0.6);
-  --radius-lg: 16px;
-  --radius-md: 10px;
-  --shadow-sm: 0 1px 2px rgba(16,24,40,0.04);
-  --shadow-md: 0 6px 20px rgba(2,6,23,0.08);
-  --max-width: 1200px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
-  --ui-font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+/* Body */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
+  line-height: 1.6;
 }
 
-/* -------- Base / Reset -------- */
-* { box-sizing: border-box; }
-html,body { height: 100%; }
-body{
-  margin: 0;
-  font-family: var(--ui-font);
-  background: var(--bg);
-  color: #111827;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height: 1.45;
-  padding-bottom: 4rem;
-}
-
-/* Headings */
-h1,h2,h3 { margin: 0 0 .5rem 0; font-weight: 700; letter-spacing: -0.02em; }
-h1 { font-size: 1.75rem; }
-h2 { font-size: 1.125rem; }
-h3 { font-size: 1rem; color: var(--muted); }
-
-/* Container */
-.container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 1.25rem;
-}
-
-/* -------- Header / Footer -------- */
-.app-header{
-  background: linear-gradient(90deg,var(--brand),var(--brand-600));
-  color: #fff;
-  padding: 1.25rem 0;
-  box-shadow: var(--shadow-md);
-}
-.app-header .title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: .25rem;
-}
-.app-subtitle { opacity: .95; font-size: .95rem; color: rgba(255,255,255,0.92); }
-
-/* Footer */
-.app-footer {
-  background: #f3f4f6;
-  padding: 1rem 0;
-  text-align: center;
-  color: var(--muted);
-  border-top: 1px solid rgba(0,0,0,0.04);
-  position: relative;
-  bottom: 0;
-  width: 100%;
-}
-
-/* -------- Grid of tool cards -------- */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0,1fr));
-  gap: 1rem;
-}
-@media (min-width:640px){ .tools-grid{ grid-template-columns: repeat(2, 1fr); } }
-@media (min-width:1024px){ .tools-grid{ grid-template-columns: repeat(3, 1fr); } }
-
-.card {
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-sm);
-  transition: transform .18s ease, box-shadow .18s ease;
+/* Links */
+a {
+  color: #3b82f6;
   text-decoration: none;
-  color: inherit;
-  display: block;
 }
-.card:hover{
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
+a:hover {
+  color: #2563eb;
+  text-decoration: underline;
 }
-.card h3 { color: var(--brand); margin-bottom: .35rem; }
-.card p { color: var(--muted); margin: 0; font-size: .95rem; }
 
-/* icon placeholder */
-.card .icon {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Header / Navigation */
+header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  z-index: 50;
+}
+header a {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+header a:hover {
+  color: #1d4ed8;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Hero Titles */
+.hero h1 {
+  font-size: 2.25rem;
   font-weight: 700;
-  color: var(--brand);
-  margin-right: .75rem;
+  color: #2563eb;
+}
+.hero p {
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+  color: #374151;
 }
 
-/* Card layout */
-.card-row {
-  display:flex;
-  align-items:flex-start;
+/* Upload / Drop Area */
+.upload-area {
+  border: 2px dashed #d1d5db;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
 }
-
-/* -------- Controls / Form elements -------- */
-.tool-panel {
-  background: var(--card);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 1rem;
+.upload-area:hover {
+  border-color: #3b82f6;
 }
-.label { font-weight:600; font-size:.95rem; margin-bottom:.35rem; display:block; color:#111827; }
-.input, input[type="file"], select, textarea {
-  width:100%;
-  padding:.6rem .75rem;
-  border-radius:8px;
-  border:1px solid rgba(15,23,42,0.06);
-  outline: none;
-  background: #fff;
-  font-size: .95rem;
-}
-.input:focus, select:focus { box-shadow: 0 4px 18px rgba(37,99,235,0.06); border-color: var(--brand-600); }
 
 /* Buttons */
-.btn {
-  display: inline-block;
-  padding: .6rem .95rem;
-  border-radius: 10px;
-  font-weight:600;
-  text-decoration:none;
-  border: none;
-  cursor: pointer;
+button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
-.btn-primary { background: var(--brand); color: #fff; }
-.btn-primary:hover { background: var(--brand-600); }
-.btn-ghost { background: transparent; color: var(--brand); border: 1px solid rgba(37,99,235,0.12); }
-.btn-success { background: var(--accent); color: #fff; }
-.btn-danger { background: var(--danger); color: #fff; }
+button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
 
-/* small text helpers */
-.kv { font-size:.9rem; color:var(--muted); }
-.controls-row { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
+/* Feature / Benefits Cards */
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+}
 
-/* -------- Canvas & image preview -------- */
-.canvas-wrap {
+/* Related Tools Cards */
+.related-tools .tool-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+.related-tools .tool-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Advertisement Boxes */
+.ad-space {
+  background-color: #e5e7eb;
+  height: 600px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: .75rem;
-}
-canvas {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 18px rgba(2,6,23,0.06);
-  background: #fff;
+  justify-content: center;
+  font-weight: 500;
+  color: #6b7280;
+  border-radius: 0.5rem;
 }
 
-/* crop selection overlay */
-.selection {
-  position: absolute;
-  border: 2px dashed rgba(37,99,235,0.9);
-  background: rgba(37,99,235,0.08);
-  pointer-events: none;
-  display: none;
+/* Footer */
+footer {
+  background-color: #f3f4f6;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+footer a {
+  margin: 0 0.5rem;
 }
 
-/* -------- Utilities -------- */
-.row { display:flex; gap:1rem; align-items:center; }
-.col { display:flex; flex-direction:column; gap:.5rem; }
-.center { text-align:center; }
-.muted { color:var(--muted); }
-.p-1 { padding: .5rem; }
-.mb-1 { margin-bottom: .5rem; }
-.mt-1 { margin-top: .5rem; }
-
-/* file input custom (simple) */
-.file-input {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-.file-input input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  .ad-space {
+    height: 300px;
+    margin-bottom: 2rem;
+  }
 }
 
-/* responsive helpers */
-@media (max-width:640px){
-  .container { padding: 1rem; }
-  h1 { font-size: 1.25rem; }
-  .card { padding: .9rem; border-radius: 12px; }
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 1.875rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  .upload-area {
+    padding: 1.5rem;
+  }
 }
-
-/* small accessibility touches */
-a, button { -webkit-tap-highlight-color: rgba(0,0,0,0.06); }
-.visually-hidden { position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }
-
-/* -------- Footer note / license block -------- */
-.readme-note {
-  margin-top: 1rem;
-  padding: .75rem;
-  border-radius: 8px;
-  font-size: .95rem;
-  color: var(--muted);
-  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(0,0,0,0.02));
-  border: 1px solid rgba(0,0,0,0.03);
-}
-
-/* -------- Small helper for inline badges -------- */
-.badge {
-  display:inline-block;
-  padding: .2rem .5rem;
-  border-radius: 999px;
-  background: rgba(37,99,235,0.08);
-  color: var(--brand);
-  font-weight:600;
-  font-size: .78rem;
-}
-
