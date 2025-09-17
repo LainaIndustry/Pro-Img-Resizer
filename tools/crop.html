@@ -1,148 +1,72 @@
+### crop.html
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Cropper</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    /* Crop selection overlay */
-    #selection {
-      position: absolute;
-      border: 2px dashed #00f;
-      background: rgba(0, 0, 255, 0.2);
-      display: none;
-      pointer-events: none;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans">
 
-  <!-- Header -->
-  <header class="bg-purple-600 text-white p-6 shadow-md">
-    <h1 class="text-3xl font-bold text-center">Image Cropper</h1>
-    <p class="text-center mt-2">Select and crop any part of your image</p>
-  </header>
+  <!-- Header / Navigation -->
 
-  <!-- Main Content -->
-  <main class="max-w-4xl mx-auto p-6">
+  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
 
-    <!-- Upload -->
-    <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">Upload Image</h2>
-      <input type="file" id="upload" accept="image/*" class="block w-full p-2 border rounded">
-    </div>
+    <!-- Left Advertisement -->
+    <aside class="hidden lg:block w-1/12 mr-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-    <!-- Crop Area -->
-    <div id="editorBox" class="hidden relative bg-white rounded-2xl p-6 shadow-md mb-6 text-center">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">Select Crop Area</h2>
-      <div class="relative inline-block">
-        <canvas id="canvas" class="border rounded"></canvas>
-        <div id="selection"></div>
+    <!-- Tool Content -->
+    <section class="flex-1">
+      <!-- Hero Section -->
+      <div class="bg-white shadow rounded p-8 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Image Cropper</h1>
+        <p class="mt-2 text-gray-700 text-lg">Crop your images easily online while maintaining quality and aspect ratio.</p>
+
+        <!-- Upload / Tool Action Area -->
+        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
+          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+        </div>
       </div>
-      <button id="cropBtn" class="mt-6 bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">Crop</button>
-    </div>
 
-    <!-- Cropped Preview -->
-    <div id="previewBox" class="hidden bg-white rounded-2xl p-6 shadow-md text-center">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">Cropped Image</h2>
-      <canvas id="croppedCanvas" class="mx-auto border rounded"></canvas>
-      <a id="downloadBtn" download="cropped-image.png" class="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Download</a>
-    </div>
+      <!-- Features / Benefits -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow p-4 rounded text-center">Precise Cropping</div>
+        <div class="bg-white shadow p-4 rounded text-center">Fast and Simple</div>
+        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
+        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
+        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
+      </div>
+
+      <!-- Related Tools -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
+          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
+          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Advertisement -->
+    <aside class="hidden lg:block w-1/12 ml-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-10">
-    <a href="../index.html" class="text-purple-600 hover:underline">← Back to Tools</a>
-  </footer>
 
-  <!-- Script -->
-  <script>
-    const upload = document.getElementById("upload");
-    const editorBox = document.getElementById("editorBox");
-    const previewBox = document.getElementById("previewBox");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const cropBtn = document.getElementById("cropBtn");
-    const croppedCanvas = document.getElementById("croppedCanvas");
-    const croppedCtx = croppedCanvas.getContext("2d");
-    const selection = document.getElementById("selection");
-    const downloadBtn = document.getElementById("downloadBtn");
-
-    let img = new Image();
-    let startX, startY, endX, endY, isSelecting = false;
-
-    // Upload Image
-    upload.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        img = new Image();
-        img.onload = () => {
-          editorBox.classList.remove("hidden");
-          previewBox.classList.add("hidden");
-
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Mouse events for selection
-    canvas.addEventListener("mousedown", (e) => {
-      const rect = canvas.getBoundingClientRect();
-      startX = e.clientX - rect.left;
-      startY = e.clientY - rect.top;
-      isSelecting = true;
-      selection.style.left = startX + "px";
-      selection.style.top = startY + "px";
-      selection.style.width = "0px";
-      selection.style.height = "0px";
-      selection.style.display = "block";
-    });
-
-    canvas.addEventListener("mousemove", (e) => {
-      if (!isSelecting) return;
-      const rect = canvas.getBoundingClientRect();
-      endX = e.clientX - rect.left;
-      endY = e.clientY - rect.top;
-
-      selection.style.left = Math.min(startX, endX) + "px";
-      selection.style.top = Math.min(startY, endY) + "px";
-      selection.style.width = Math.abs(endX - startX) + "px";
-      selection.style.height = Math.abs(endY - startY) + "px";
-    });
-
-    canvas.addEventListener("mouseup", () => {
-      isSelecting = false;
-    });
-
-    // Crop button
-    cropBtn.addEventListener("click", () => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = img.width / rect.width;
-      const scaleY = img.height / rect.height;
-
-      const sx = parseInt(selection.style.left) * scaleX;
-      const sy = parseInt(selection.style.top) * scaleY;
-      const sw = parseInt(selection.style.width) * scaleX;
-      const sh = parseInt(selection.style.height) * scaleY;
-
-      if (sw && sh) {
-        croppedCanvas.width = sw;
-        croppedCanvas.height = sh;
-        croppedCtx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
-        previewBox.classList.remove("hidden");
-        downloadBtn.href = croppedCanvas.toDataURL("image/png");
-      }
-    });
-  </script>
 </body>
 </html>
-
+```
