@@ -1,101 +1,72 @@
+### meme.html
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meme Generator Tool</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 20px;
-    }
-    #canvas {
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      max-width: 100%;
-    }
-    .controls {
-      margin-top: 15px;
-    }
-    input, select, button {
-      margin: 5px;
-      padding: 8px 12px;
-    }
-  </style>
+  <title>Meme Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Meme Generator</h1>
-  <input type="file" id="upload" accept="image/*"><br>
-  <canvas id="canvas"></canvas>
+<body class="bg-gray-50 font-sans">
 
-  <div class="controls">
-    <input type="text" id="topText" placeholder="Top Text">
-    <input type="text" id="bottomText" placeholder="Bottom Text"><br>
+  <!-- Header / Navigation -->
 
-    <label for="fontSize">Font Size:</label>
-    <input type="number" id="fontSize" value="40" min="10" max="100">
+  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
 
-    <label for="color">Text Color:</label>
-    <input type="color" id="color" value="#ffffff"><br>
+    <!-- Left Advertisement -->
+    <aside class="hidden lg:block w-1/12 mr-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-    <button onclick="drawMeme()">Generate Meme</button>
-    <button onclick="downloadMeme()">💾 Download Meme</button>
-  </div>
+    <!-- Tool Content -->
+    <section class="flex-1">
+      <!-- Hero Section -->
+      <div class="bg-white shadow rounded p-8 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Meme Generator</h1>
+        <p class="mt-2 text-gray-700 text-lg">Create memes online quickly. Add text, images, and share instantly.</p>
 
-  <script>
-    const upload = document.getElementById('upload');
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let img = new Image();
+        <!-- Upload / Tool Action Area -->
+        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
+          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+        </div>
+      </div>
 
-    upload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          drawMeme();
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+      <!-- Features / Benefits -->
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow p-4 rounded text-center">Add Text Easily</div>
+        <div class="bg-white shadow p-4 rounded text-center">Fast and Simple</div>
+        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
+        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
+        <div class="bg-white shadow p-4 rounded text-center">Share Online Instantly</div>
+      </div>
 
-    function drawMeme() {
-      if (!img.src) return;
-      const topText = document.getElementById('topText').value.toUpperCase();
-      const bottomText = document.getElementById('bottomText').value.toUpperCase();
-      const fontSize = document.getElementById('fontSize').value;
-      const color = document.getElementById('color').value;
+      <!-- Related Tools -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
+          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
+          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
+          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+        </div>
+      </div>
+    </section>
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    <!-- Right Advertisement -->
+    <aside class="hidden lg:block w-1/12 ml-4">
+      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
+    </aside>
 
-      ctx.font = `${fontSize}px Impact, Arial, sans-serif`;
-      ctx.fillStyle = color;
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = fontSize / 10;
-      ctx.textAlign = "center";
+  </main>
 
-      // Top Text
-      ctx.fillText(topText, canvas.width / 2, fontSize + 10);
-      ctx.strokeText(topText, canvas.width / 2, fontSize + 10);
+  <!-- Footer -->
 
-      // Bottom Text
-      ctx.fillText(bottomText, canvas.width / 2, canvas.height - 10);
-      ctx.strokeText(bottomText, canvas.width / 2, canvas.height - 10);
-    }
-
-    function downloadMeme() {
-      const link = document.createElement('a');
-      link.download = 'meme.png';
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    }
-  </script>
 </body>
 </html>
-
+```
