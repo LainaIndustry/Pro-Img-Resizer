@@ -1,66 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - ProImgResizer</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ProImgResizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 font-sans">
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-image logo-icon"></i>
+                <div class="logo-text">Pro<span>Img</span>Resizer</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                    <li><a href="terms.html">Terms</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <!-- Header -->
-  <header class="bg-blue-600 text-white p-6 shadow-md">
-    <h1 class="text-3xl font-bold text-center">Contact Us</h1>
-    <p class="text-center mt-2">We’d love to hear from you</p>
-  </header>
-
-  <!-- Main Content -->
-  <main class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md mt-8">
-    <h2 class="text-2xl font-semibold text-blue-600 mb-4">Get in Touch</h2>
-    <p class="text-gray-700 mb-6">
-      Have questions, feedback, or suggestions? Fill out the form below, and we’ll get back to you as soon as possible.
-    </p>
-
-    <!-- Contact Form -->
-    <form action="mailto:your-email@example.com" method="POST" enctype="text/plain" class="space-y-4">
-      <div>
-        <label class="block text-gray-700 font-medium mb-2">Your Name</label>
-        <input type="text" name="name" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
-      </div>
-
-      <div>
-        <label class="block text-gray-700 font-medium mb-2">Your Email</label>
-        <input type="email" name="email" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
-      </div>
-
-      <div>
-        <label class="block text-gray-700 font-medium mb-2">Message</label>
-        <textarea name="message" rows="5" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"></textarea>
-      </div>
-
-      <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">
-        Send Message
-      </button>
-    </form>
-
-    <!-- Alternative Contact -->
-    <div class="mt-8 text-gray-700">
-      <p><strong>Email:</strong> <a href="mailto:your-email@example.com" class="text-blue-600 hover:underline">your-email@example.com</a></p>
-      <p><strong>Website:</strong> <a href="index.html" class="text-blue-600 hover:underline">ProImgResizer</a></p>
+    <div class="container">
+        <div class="tool-container">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="tool-description">Have questions, suggestions, or need support? We'd love to hear from you!</p>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email Us</h3>
+                        <p>support@proimgresizer.com</p>
+                        <p>We typically respond within 24 hours</p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-comments"></i>
+                        <h3>Community Forum</h3>
+                        <p>Join our community to get help and share ideas</p>
+                        <a href="#" class="btn">Visit Forum</a>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <i class="fas fa-book"></i>
+                        <h3>Help Center</h3>
+                        <p>Find answers to common questions in our help center</p>
+                        <a href="#" class="btn">View Help Articles</a>
+                    </div>
+                </div>
+                
+                <div class="contact-form-container">
+                    <h3>Send us a Message</h3>
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="support">Technical Support</option>
+                                <option value="suggestion">Feature Suggestion</option>
+                                <option value="bug">Report a Bug</option>
+                                <option value="partnership">Partnership Inquiry</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                    
+                    <div id="form-message" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 4px;"></div>
+                </div>
+            </div>
+            
+            <div class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+                
+                <div class="faq-item">
+                    <h4>Is ProImgResizer free to use?</h4>
+                    <p>Yes, all our basic tools are completely free to use. We may offer premium features in the future, but the core functionality will always remain free.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>Are my images stored on your servers?</h4>
+                    <p>No. All image processing happens directly in your browser. Your images are never uploaded to our servers, ensuring complete privacy.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>What image formats do you support?</h4>
+                    <p>We support all major image formats including JPG, PNG, GIF, WebP, and BMP. Our conversion tool can convert between these formats.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h4>Is there a file size limit?</h4>
+                    <p>Since processing happens in your browser, the limit depends on your device's capabilities. Most modern devices can handle images up to 20-30MB without issues.</p>
+                </div>
+            </div>
+        </div>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-10">
-    <p>© 2025 ProImgResizer. All rights reserved.</p>
-    <div class="mt-2 space-x-4">
-      <a href="about.html" class="hover:text-blue-600">About</a>
-      <a href="privacy.html" class="hover:text-blue-600">Privacy Policy</a>
-      <a href="terms.html" class="hover:text-blue-600">Terms</a>
-      <a href="contact.html" class="hover:text-blue-600">Contact</a>
-    </div>
-  </footer>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ProImgResizer</h3>
+                <p>Your all-in-one solution for image editing needs. Fast, secure, and easy to use.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Tools</h3>
+                <ul>
+                    <li><a href="index.html">All Tools</a></li>
+                    <li><a href="resize.html">Resize</a></li>
+                    <li><a href="crop.html">Crop</a></li>
+                    <li><a href="compress.html">Compress</a></li>
+                    <li><a href="convert.html">Convert</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ProImgResizer. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contact-form');
+            const formMessage = document.getElementById('form-message');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Simulate form submission
+                formMessage.textContent = 'Thank you for your message! We will get back to you soon.';
+                formMessage.style.display = 'block';
+                formMessage.style.backgroundColor = '#d4edda';
+                formMessage.style.color = '#155724';
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
+    <style>
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .contact-method {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .contact-method i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .contact-method h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .contact-form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .faq-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-item h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </body>
 </html>
-
