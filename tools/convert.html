@@ -1,73 +1,730 @@
-### convert.html
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Converter</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - ProImgResizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .conversion-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .conversion-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .conversion-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conversion-option.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .conversion-option i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .format-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .format-preset {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .format-preset:hover {
+            border-color: var(--primary);
+        }
+        
+        .format-preset.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .conversion-settings {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .batch-conversion {
+            margin-top: 2rem;
+            border-top: 1px solid #e9ecef;
+            padding-top: 1.5rem;
+        }
+        
+        .batch-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .batch-item {
+            position: relative;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .batch-item img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+        
+        .batch-item .format-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .batch-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-
-  <!-- Header / Navigation -->
-
-  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
-
-    <!-- Left Advertisement -->
-    <aside class="hidden lg:block w-1/12 mr-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
-
-    <!-- Tool Content -->
-    <section class="flex-1">
-      <!-- Hero Section -->
-      <div class="bg-white shadow rounded p-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Image Converter</h1>
-        <p class="mt-2 text-gray-700 text-lg">Convert images between formats like JPG, PNG, WebP, and SVG online instantly.</p>
-
-        <!-- Upload / Tool Action Area -->
-        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
-          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
-          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-image logo-icon"></i>
+                <div class="logo-text">Pro<span>Img</span>Resizer</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="resize.html">Resize</a></li>
+                    <li><a href="crop.html">Crop</a></li>
+                    <li><a href="compress.html">Compress</a></li>
+                    <li><a href="convert.html" class="active">Convert</a></li>
+                    <li><a href="colorpicker.html">Color Picker</a></li>
+                    <li><a href="enlarge.html">Enlarge</a></li>
+                    <li><a href="flip.html">Flip</a></li>
+                    <li><a href="meme.html">Meme</a></li>
+                    <li><a href="rotate.html">Rotate</a></li>
+                </ul>
+            </nav>
         </div>
-      </div>
+    </header>
 
-      <!-- Features / Benefits -->
-      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="bg-white shadow p-4 rounded text-center">Supports Multiple Formats</div>
-        <div class="bg-white shadow p-4 rounded text-center">High Quality Conversion</div>
-        <div class="bg-white shadow p-4 rounded text-center">Fast and Easy</div>
-        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
-        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
-      </div>
-
-      <!-- Related Tools -->
-      <div class="mt-10">
-        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
-          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
-          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
-          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+    <div class="container">
+        <div class="tool-container">
+            <h2 class="section-title">Image Format Converter</h2>
+            <p class="tool-description">Convert your images between different formats with our easy-to-use converter. Supports all popular image formats.</p>
+            
+            <div class="conversion-options">
+                <div class="conversion-option active" data-option="single">
+                    <i class="fas fa-file-image"></i>
+                    <h3>Single Image</h3>
+                    <p>Convert one image at a time</p>
+                </div>
+                <div class="conversion-option" data-option="batch">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Batch Convert</h3>
+                    <p>Convert multiple images at once</p>
+                </div>
+            </div>
+            
+            <div class="tool-ui">
+                <div class="upload-section">
+                    <div class="upload-area" id="drop-zone">
+                        <div class="upload-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <p>Drag & Drop your image(s) here</p>
+                        <p>OR</p>
+                        <button class="btn" id="browse-btn">Browse Files</button>
+                        <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+                    </div>
+                    
+                    <div class="format-presets">
+                        <div class="format-preset active" data-format="jpeg">
+                            <h4>JPG</h4>
+                            <p>Best for photos</p>
+                        </div>
+                        <div class="format-preset" data-format="png">
+                            <h4>PNG</h4>
+                            <p>With transparency</p>
+                        </div>
+                        <div class="format-preset" data-format="webp">
+                            <h4>WebP</h4>
+                            <p>Modern format</p>
+                        </div>
+                        <div class="format-preset" data-format="gif">
+                            <h4>GIF</h4>
+                            <p>For animations</p>
+                        </div>
+                    </div>
+                    
+                    <div class="conversion-settings">
+                        <div class="control-group">
+                            <label for="quality">Quality (for JPG/WebP)</label>
+                            <input type="range" id="quality" min="1" max="100" value="85">
+                            <div class="value-display"><span id="quality-value">85</span>%</div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="preserve-transparency">
+                                <input type="checkbox" id="preserve-transparency" checked>
+                                Preserve transparency (if available)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="convert-btn" disabled><i class="fas fa-exchange-alt"></i> Convert Image</button>
+                        <button class="btn btn-secondary" id="reset-btn"><i class="fas fa-redo"></i> Reset</button>
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-container">
+                        <img id="image-preview" class="image-preview" alt="Image Preview">
+                        <p class="placeholder-text">Image preview will appear here</p>
+                    </div>
+                    
+                    <div class="file-info">
+                        <div class="info-row">
+                            <span class="info-label">Original Format:</span>
+                            <span id="original-format">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Original Size:</span>
+                            <span id="original-size">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Target Format:</span>
+                            <span id="target-format">JPG</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Converted Size:</span>
+                            <span id="converted-size">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="download-btn" disabled><i class="fas fa-download"></i> Download Converted Image</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="batch-conversion" id="batch-section" style="display: none;">
+                <h3>Batch Conversion</h3>
+                <p>Select multiple images to convert them all at once</p>
+                
+                <div class="batch-items" id="batch-items">
+                    <!-- Batch items will be added here dynamically -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" id="batch-convert-btn" disabled><i class="fas fa-cogs"></i> Convert All Images</button>
+                    <button class="btn" id="batch-download-btn" disabled><i class="fas fa-download"></i> Download All as ZIP</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
+        
+        <div class="tool-info">
+            <h3>About Image Conversion</h3>
+            <p>Different image formats have different strengths. Our converter helps you choose the right format for your needs:</p>
+            
+            <div class="feature-list">
+                <h4>Format Guide:</h4>
+                <ul>
+                    <li><strong>JPG/JPEG</strong> - Best for photographs with many colors. Uses lossy compression.</li>
+                    <li><strong>PNG</strong> - Best for images with transparency or text. Uses lossless compression.</li>
+                    <li><strong>WebP</strong> - Modern format that offers superior compression. Supported by most modern browsers.</li>
+                    <li><strong>GIF</strong> - Best for simple animations. Limited to 256 colors.</li>
+                    <li><strong>SVG</strong> - Vector format that scales perfectly. Best for logos and illustrations.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-    <!-- Right Advertisement -->
-    <aside class="hidden lg:block w-1/12 ml-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
+    <footer>
+        <!-- Footer will be populated by JavaScript -->
+    </footer>
 
-  </main>
-
-  <!-- Footer -->
-
+    <script src="script.js"></script>
+    <script>
+        // Conversion Tool Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const dropZone = document.getElementById('drop-zone');
+            const browseBtn = document.getElementById('browse-btn');
+            const convertBtn = document.getElementById('convert-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const preview = document.getElementById('image-preview');
+            const placeholder = document.querySelector('.placeholder-text');
+            const qualitySlider = document.getElementById('quality');
+            const qualityValue = document.getElementById('quality-value');
+            
+            const originalFormatEl = document.getElementById('original-format');
+            const originalSizeEl = document.getElementById('original-size');
+            const targetFormatEl = document.getElementById('target-format');
+            const convertedSizeEl = document.getElementById('converted-size');
+            
+            const conversionOptions = document.querySelectorAll('.conversion-option');
+            const formatPresets = document.querySelectorAll('.format-preset');
+            const batchSection = document.getElementById('batch-section');
+            const batchItems = document.getElementById('batch-items');
+            const batchConvertBtn = document.getElementById('batch-convert-btn');
+            const batchDownloadBtn = document.getElementById('batch-download-btn');
+            
+            let originalImage = null;
+            let originalBlob = null;
+            let convertedBlob = null;
+            let originalFileType = '';
+            let targetFormat = 'jpeg';
+            let conversionMode = 'single';
+            let batchFiles = [];
+            
+            // Initialize the tool
+            function initConverter() {
+                // File input change event
+                fileInput.addEventListener('change', handleFileSelect);
+                
+                // Drag and drop events
+                dropZone.addEventListener('dragover', handleDragOver);
+                dropZone.addEventListener('dragleave', handleDragLeave);
+                dropZone.addEventListener('drop', handleDrop);
+                
+                // Browse button click
+                browseBtn.addEventListener('click', () => fileInput.click());
+                
+                // Quality slider update
+                qualitySlider.addEventListener('input', function() {
+                    qualityValue.textContent = this.value;
+                });
+                
+                // Convert button click
+                convertBtn.addEventListener('click', convertImage);
+                
+                // Download button click
+                downloadBtn.addEventListener('click', downloadImage);
+                
+                // Reset button click
+                resetBtn.addEventListener('click', resetAll);
+                
+                // Conversion mode selection
+                conversionOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        conversionOptions.forEach(o => o.classList.remove('active'));
+                        this.classList.add('active');
+                        conversionMode = this.dataset.option;
+                        
+                        if (conversionMode === 'batch') {
+                            batchSection.style.display = 'block';
+                            fileInput.setAttribute('multiple', 'multiple');
+                        } else {
+                            batchSection.style.display = 'none';
+                            fileInput.removeAttribute('multiple');
+                            resetBatch();
+                        }
+                    });
+                });
+                
+                // Format selection
+                formatPresets.forEach(preset => {
+                    preset.addEventListener('click', function() {
+                        formatPresets.forEach(p => p.classList.remove('active'));
+                        this.classList.add('active');
+                        targetFormat = this.dataset.format;
+                        targetFormatEl.textContent = targetFormat.toUpperCase();
+                    });
+                });
+                
+                // Batch convert button
+                batchConvertBtn.addEventListener('click', convertBatch);
+                
+                // Batch download button
+                batchDownloadBtn.addEventListener('click', downloadBatch);
+            }
+            
+            function handleFileSelect(e) {
+                const files = Array.from(e.target.files || e.dataTransfer.files);
+                
+                if (files.length === 0) {
+                    alert('Please select at least one image file.');
+                    return;
+                }
+                
+                if (conversionMode === 'single') {
+                    // Single file mode
+                    const file = files[0];
+                    processSingleFile(file);
+                } else {
+                    // Batch mode
+                    processBatchFiles(files);
+                }
+            }
+            
+            function processSingleFile(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                originalBlob = file;
+                originalFileType = file.type.split('/')[1].toUpperCase();
+                originalFormatEl.textContent = originalFileType;
+                originalSizeEl.textContent = formatFileSize(file.size);
+                targetFormatEl.textContent = targetFormat.toUpperCase();
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    convertBtn.disabled = false;
+                    
+                    // Load image
+                    originalImage = new Image();
+                    originalImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            function processBatchFiles(files) {
+                // Filter out non-image files
+                const imageFiles = files.filter(file => file.type.match('image.*'));
+                
+                if (imageFiles.length === 0) {
+                    alert('Please select at least one image file.');
+                    return;
+                }
+                
+                batchFiles = imageFiles;
+                batchItems.innerHTML = '';
+                
+                // Add each file to the batch view
+                batchFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const format = file.type.split('/')[1];
+                        
+                        const batchItem = document.createElement('div');
+                        batchItem.className = 'batch-item';
+                        batchItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Batch image ${index + 1}">
+                            <span class="format-badge">${format}</span>
+                            <div class="remove-btn" data-index="${index}">&times;</div>
+                        `;
+                        
+                        batchItems.appendChild(batchItem);
+                        
+                        // Add remove functionality
+                        batchItem.querySelector('.remove-btn').addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const index = parseInt(this.dataset.index);
+                            batchFiles.splice(index, 1);
+                            updateBatchView();
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                batchConvertBtn.disabled = false;
+            }
+            
+            function updateBatchView() {
+                batchItems.innerHTML = '';
+                
+                if (batchFiles.length === 0) {
+                    batchConvertBtn.disabled = true;
+                    batchDownloadBtn.disabled = true;
+                    return;
+                }
+                
+                batchFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const format = file.type.split('/')[1];
+                        
+                        const batchItem = document.createElement('div');
+                        batchItem.className = 'batch-item';
+                        batchItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Batch image ${index + 1}">
+                            <span class="format-badge">${format}</span>
+                            <div class="remove-btn" data-index="${index}">&times;</div>
+                        `;
+                        
+                        batchItems.appendChild(batchItem);
+                        
+                        // Add remove functionality
+                        batchItem.querySelector('.remove-btn').addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const index = parseInt(this.dataset.index);
+                            batchFiles.splice(index, 1);
+                            updateBatchView();
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '#e6eeff';
+            }
+            
+            function handleDragLeave(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+                handleFileSelect(e);
+            }
+            
+            function convertImage() {
+                if (!originalImage) {
+                    alert('Please select an image first.');
+                    return;
+                }
+                
+                const quality = parseInt(qualitySlider.value) / 100;
+                const preserveTransparency = document.getElementById('preserve-transparency').checked;
+                
+                // Create a canvas for conversion
+                const canvas = document.createElement('canvas');
+                canvas.width = originalImage.width;
+                canvas.height = originalImage.height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(originalImage, 0, 0);
+                
+                // Get the converted image
+                let mimeType;
+                switch(targetFormat) {
+                    case 'jpeg':
+                        mimeType = 'image/jpeg';
+                        break;
+                    case 'png':
+                        mimeType = 'image/png';
+                        break;
+                    case 'webp':
+                        mimeType = 'image/webp';
+                        break;
+                    case 'gif':
+                        mimeType = 'image/gif';
+                        break;
+                    default:
+                        mimeType = 'image/jpeg';
+                }
+                
+                // For PNG and formats that support transparency
+                if ((targetFormat === 'png' || targetFormat === 'webp') && preserveTransparency) {
+                    // Keep transparency
+                    canvas.toBlob(function(blob) {
+                        convertedBlob = blob;
+                        const convertedURL = URL.createObjectURL(blob);
+                        
+                        // Update preview
+                        preview.src = convertedURL;
+                        
+                        // Update file info
+                        convertedSizeEl.textContent = formatFileSize(blob.size);
+                        
+                        // Enable download button
+                        downloadBtn.disabled = false;
+                    }, mimeType);
+                } else {
+                    // For formats that don't support transparency or when not preserving it
+                    // Fill background with white if converting from transparent format
+                    if (originalFileType.toLowerCase() === 'png' && !preserveTransparency) {
+                        // Create a white background
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = originalImage.width;
+                        tempCanvas.height = originalImage.height;
+                        const tempCtx = tempCanvas.getContext('2d');
+                        
+                        // Fill with white
+                        tempCtx.fillStyle = '#FFFFFF';
+                        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                        
+                        // Draw original image on top
+                        tempCtx.drawImage(originalImage, 0, 0);
+                        
+                        // Convert
+                        tempCanvas.toBlob(function(blob) {
+                            convertedBlob = blob;
+                            const convertedURL = URL.createObjectURL(blob);
+                            
+                            // Update preview
+                            preview.src = convertedURL;
+                            
+                            // Update file info
+                            convertedSizeEl.textContent = formatFileSize(blob.size);
+                            
+                            // Enable download button
+                            downloadBtn.disabled = false;
+                        }, mimeType, quality);
+                    } else {
+                        // Regular conversion
+                        canvas.toBlob(function(blob) {
+                            convertedBlob = blob;
+                            const convertedURL = URL.createObjectURL(blob);
+                            
+                            // Update preview
+                            preview.src = convertedURL;
+                            
+                            // Update file info
+                            convertedSizeEl.textContent = formatFileSize(blob.size);
+                            
+                            // Enable download button
+                            downloadBtn.disabled = false;
+                        }, mimeType, quality);
+                    }
+                }
+            }
+            
+            function convertBatch() {
+                if (batchFiles.length === 0) {
+                    alert('Please add images to convert.');
+                    return;
+                }
+                
+                // This would typically use a library like JSZip
+                // For this example, we'll just show an alert
+                alert(`Batch conversion of ${batchFiles.length} images to ${targetFormat} format would happen here. In a real implementation, this would convert all images and prepare them for download.`);
+                
+                batchDownloadBtn.disabled = false;
+            }
+            
+            function downloadImage() {
+                if (!convertedBlob) {
+                    alert('Please convert the image first.');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.download = 'converted-image.' + targetFormat;
+                link.href = URL.createObjectURL(convertedBlob);
+                link.click();
+            }
+            
+            function downloadBatch() {
+                if (batchFiles.length === 0) {
+                    alert('Please convert images first.');
+                    return;
+                }
+                
+                // This would typically use a library like JSZip
+                alert(`Downloading ${batchFiles.length} converted images as ZIP. In a real implementation, this would create and download a ZIP file.`);
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) {
+                    return bytes + ' bytes';
+                } else if (bytes < 1048576) {
+                    return (bytes / 1024).toFixed(2) + ' KB';
+                } else {
+                    return (bytes / 1048576).toFixed(2) + ' MB';
+                }
+            }
+            
+            function resetAll() {
+                fileInput.value = '';
+                preview.src = '';
+                preview.style.display = 'none';
+                placeholder.style.display = 'block';
+                qualitySlider.value = 85;
+                qualityValue.textContent = '85';
+                originalFormatEl.textContent = '-';
+                originalSizeEl.textContent = '-';
+                convertedSizeEl.textContent = '-';
+                convertBtn.disabled = true;
+                downloadBtn.disabled = true;
+                originalImage = null;
+                originalBlob = null;
+                convertedBlob = null;
+                dropZone.style.background = '';
+                
+                // Reset to single mode if in batch mode
+                if (conversionMode === 'batch') {
+                    conversionOptions.forEach(o => o.classList.remove('active'));
+                    document.querySelector('[data-option="single"]').classList.add('active');
+                    conversionMode = 'single';
+                    batchSection.style.display = 'none';
+                    fileInput.removeAttribute('multiple');
+                    resetBatch();
+                }
+            }
+            
+            function resetBatch() {
+                batchFiles = [];
+                batchItems.innerHTML = '';
+                batchConvertBtn.disabled = true;
+                batchDownloadBtn.disabled = true;
+            }
+            
+            // Initialize the converter
+            initConverter();
+        });
+    </script>
 </body>
 </html>
-```
