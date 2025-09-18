@@ -1,72 +1,643 @@
-### rotate.html
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Rotator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Rotator - ProImgResizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rotation-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .rotation-preset {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .rotation-preset:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rotation-preset.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .rotation-preset i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .angle-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .angle-control input {
+            flex: 1;
+        }
+        
+        .angle-value {
+            min-width: 60px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .rotation-preview {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            margin: 1.5rem 0;
+        }
+        
+        .rotation-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .rotation-origin {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .origin-control {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .origin-control label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .origin-control select {
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+        }
+        
+        .preview-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .preview-box {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .preview-header {
+            background: var(--light-gray);
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .preview-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            min-height: 200px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 180px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-rotate {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .rotation-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .rotation-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-
-  <!-- Header / Navigation -->
-
-  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
-
-    <!-- Left Advertisement -->
-    <aside class="hidden lg:block w-1/12 mr-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
-
-    <!-- Tool Content -->
-    <section class="flex-1">
-      <!-- Hero Section -->
-      <div class="bg-white shadow rounded p-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Image Rotator</h1>
-        <p class="mt-2 text-gray-700 text-lg">Rotate your images online in any angle while keeping quality intact.</p>
-
-        <!-- Upload / Tool Action Area -->
-        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
-          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
-          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-image logo-icon"></i>
+                <div class="logo-text">Pro<span>Img</span>Resizer</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="resize.html">Resize</a></li>
+                    <li><a href="crop.html">Crop</a></li>
+                    <li><a href="compress.html">Compress</a></li>
+                    <li><a href="convert.html">Convert</a></li>
+                    <li><a href="colorpicker.html">Color Picker</a></li>
+                    <li><a href="enlarge.html">Enlarge</a></li>
+                    <li><a href="flip.html">Flip</a></li>
+                    <li><a href="meme.html">Meme</a></li>
+                    <li><a href="rotate.html" class="active">Rotate</a></li>
+                </ul>
+            </nav>
         </div>
-      </div>
+    </header>
 
-      <!-- Features / Benefits -->
-      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="bg-white shadow p-4 rounded text-center">Rotate 90°, 180°, 270°</div>
-        <div class="bg-white shadow p-4 rounded text-center">Fast and Easy</div>
-        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
-        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
-        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
-      </div>
-
-      <!-- Related Tools -->
-      <div class="mt-10">
-        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
-          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
-          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
-          <div class="bg-white shadow p-4 rounded text-center">Image Enlarger</div>
+    <div class="container">
+        <div class="tool-container">
+            <h2 class="section-title">Image Rotator Tool</h2>
+            <p class="tool-description">Rotate your images with precision. Correct tilted photos or create artistic effects with custom rotations.</p>
+            
+            <div class="rotation-presets">
+                <div class="rotation-preset" data-angle="90">
+                    <i class="fas fa-redo"></i>
+                    <h3>90° Right</h3>
+                    <p>Quarter turn clockwise</p>
+                </div>
+                <div class="rotation-preset" data-angle="-90">
+                    <i class="fas fa-undo"></i>
+                    <h3>90° Left</h3>
+                    <p>Quarter turn counterclockwise</p>
+                </div>
+                <div class="rotation-preset" data-angle="180">
+                    <i class="fas fa-sync"></i>
+                    <h3>180°</h3>
+                    <p>Upside down</p>
+                </div>
+                <div class="rotation-preset" data-angle="custom">
+                    <i class="fas fa-sliders-h"></i>
+                    <h3>Custom</h3>
+                    <p>Set any angle</p>
+                </div>
+            </div>
+            
+            <div class="tool-ui">
+                <div class="upload-section">
+                    <div class="upload-area" id="drop-zone">
+                        <div class="upload-icon">
+                            <i class="fas fa-sync"></i>
+                        </div>
+                        <p>Drag & Drop your image here</p>
+                        <p>OR</p>
+                        <button class="btn" id="browse-btn">Browse Files</button>
+                        <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div class="angle-control">
+                        <label for="rotation-angle">Rotation Angle:</label>
+                        <input type="range" id="rotation-angle" min="-180" max="180" value="0">
+                        <span class="angle-value" id="angle-value">0°</span>
+                    </div>
+                    
+                    <div class="rotation-origin">
+                        <div class="origin-control">
+                            <label for="origin-x">Origin X</label>
+                            <select id="origin-x">
+                                <option value="center">Center</option>
+                                <option value="left">Left</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </div>
+                        <div class="origin-control">
+                            <label for="origin-y">Origin Y</label>
+                            <select id="origin-y">
+                                <option value="center">Center</option>
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="auto-crop">
+                            <input type="checkbox" id="auto-crop" checked>
+                            Auto-crop after rotation
+                        </label>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="rotate-btn" disabled><i class="fas fa-sync"></i> Rotate Image</button>
+                        <button class="btn btn-secondary" id="reset-btn"><i class="fas fa-redo"></i> Reset</button>
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="rotation-preview">
+                        <img id="rotation-preview" alt="Rotation preview">
+                        <p class="placeholder-text">Image preview will appear here</p>
+                    </div>
+                    
+                    <div class="preview-comparison">
+                        <div class="preview-box">
+                            <div class="preview-header">Original</div>
+                            <div class="preview-content">
+                                <img id="original-preview" class="preview-image" alt="Original image">
+                                <p class="placeholder-text">Original image</p>
+                            </div>
+                        </div>
+                        <div class="preview-box">
+                            <div class="preview-header">Rotated</div>
+                            <div class="preview-content">
+                                <img id="rotated-preview" class="preview-image" alt="Rotated image">
+                                <p class="placeholder-text">Rotated result</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="file-info">
+                        <div class="info-row">
+                            <span class="info-label">Original Size:</span>
+                            <span id="original-size">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Original Dimensions:</span>
+                            <span id="original-dimensions">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Rotation Angle:</span>
+                            <span id="rotation-info">0°</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="download-btn" disabled><i class="fas fa-download"></i> Download Rotated Image</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rotation-info">
+                <h4>Rotation Tips:</h4>
+                <p>Use small angle adjustments (1-5°) to straighten slightly tilted photos. For 90° and 180° rotations, the auto-crop feature will maintain the original aspect ratio. Custom angles may result in blank areas that can be cropped out.</p>
+            </div>
         </div>
-      </div>
-    </section>
+        
+        <div class="tool-info">
+            <h3>About Image Rotation</h3>
+            <p>Rotating images is useful for correcting photos that were taken at an angle, changing orientation for different displays, or creating artistic effects. Our rotation tool gives you precise control over the rotation angle and origin point.</p>
+            
+            <div class="feature-list">
+                <h4>Common Use Cases:</h4>
+                <ul>
+                    <li><strong>Straightening photos</strong> - Correct images that were taken at a slight angle</li>
+                    <li><strong>Changing orientation</strong> - Switch between portrait and landscape formats</li>
+                    <li><strong>Creative effects</strong> - Use unusual angles for artistic purposes</li>
+                    <li><strong>Batch processing</strong> - Rotate multiple images to the same orientation</li>
+                </ul>
+                
+                <h4>Rotation Options:</h4>
+                <ul>
+                    <li><strong>Preset angles</strong> - Quick 90°, 180°, and 270° rotations</li>
+                    <li><strong>Custom angles</strong> - Any rotation from -180° to 180°</li>
+                    <li><strong>Rotation origin</strong> - Control the pivot point of the rotation</li>
+                    <li><strong>Auto-crop</strong> - Automatically remove empty areas after rotation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-    <!-- Right Advertisement -->
-    <aside class="hidden lg:block w-1/12 ml-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
+    <footer>
+        <!-- Footer will be populated by JavaScript -->
+    </footer>
 
-  </main>
-
-  <!-- Footer -->
-
+    <script src="script.js"></script>
+    <script>
+        // Rotation Tool Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const dropZone = document.getElementById('drop-zone');
+            const browseBtn = document.getElementById('browse-btn');
+            const rotateBtn = document.getElementById('rotate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const rotationPreview = document.getElementById('rotation-preview');
+            const originalPreview = document.getElementById('original-preview');
+            const rotatedPreview = document.getElementById('rotated-preview');
+            const rotationPlaceholder = document.querySelector('.rotation-preview .placeholder-text');
+            const originalPlaceholder = document.querySelector('#original-preview + .placeholder-text');
+            const rotatedPlaceholder = document.querySelector('#rotated-preview + .placeholder-text');
+            const rotationSlider = document.getElementById('rotation-angle');
+            const angleValue = document.getElementById('angle-value');
+            const rotationInfo = document.getElementById('rotation-info');
+            const originXSelect = document.getElementById('origin-x');
+            const originYSelect = document.getElementById('origin-y');
+            const autoCropCheckbox = document.getElementById('auto-crop');
+            
+            const originalSizeEl = document.getElementById('original-size');
+            const originalDimensionsEl = document.getElementById('original-dimensions');
+            
+            const rotationPresets = document.querySelectorAll('.rotation-preset');
+            
+            let originalImage = null;
+            let originalBlob = null;
+            let rotatedBlob = null;
+            let rotationAngle = 0;
+            let rotationOrigin = 'center center';
+            
+            // Initialize the tool
+            function initRotator() {
+                // File input change event
+                fileInput.addEventListener('change', handleFileSelect);
+                
+                // Drag and drop events
+                dropZone.addEventListener('dragover', handleDragOver);
+                dropZone.addEventListener('dragleave', handleDragLeave);
+                dropZone.addEventListener('drop', handleDrop);
+                
+                // Browse button click
+                browseBtn.addEventListener('click', () => fileInput.click());
+                
+                // Rotate button click
+                rotateBtn.addEventListener('click', rotateImage);
+                
+                // Download button click
+                downloadBtn.addEventListener('click', downloadImage);
+                
+                // Reset button click
+                resetBtn.addEventListener('click', resetAll);
+                
+                // Rotation slider
+                rotationSlider.addEventListener('input', function() {
+                    rotationAngle = parseInt(this.value);
+                    angleValue.textContent = rotationAngle + '°';
+                    rotationInfo.textContent = rotationAngle + '°';
+                    updateRotationPreview();
+                });
+                
+                // Rotation origin changes
+                originXSelect.addEventListener('change', updateRotationOrigin);
+                originYSelect.addEventListener('change', updateRotationOrigin);
+                
+                // Rotation presets
+                rotationPresets.forEach(preset => {
+                    preset.addEventListener('click', function() {
+                        rotationPresets.forEach(p => p.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        const angle = this.dataset.angle;
+                        if (angle !== 'custom') {
+                            rotationAngle = parseInt(angle);
+                            rotationSlider.value = rotationAngle;
+                            angleValue.textContent = rotationAngle + '°';
+                            rotationInfo.textContent = rotationAngle + '°';
+                            updateRotationPreview();
+                        }
+                    });
+                });
+                
+                // Set custom as default
+                document.querySelector('[data-angle="custom"]').classList.add('active');
+            }
+            
+            function updateRotationOrigin() {
+                const originX = originXSelect.value;
+                const originY = originYSelect.value;
+                rotationOrigin = `${originX} ${originY}`;
+                updateRotationPreview();
+            }
+            
+            function updateRotationPreview() {
+                if (!originalImage) return;
+                
+                rotationPreview.style.transform = `rotate(${rotationAngle}deg)`;
+                rotationPreview.style.transformOrigin = rotationOrigin;
+            }
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0] || e.dataTransfer.files[0];
+                
+                if (!file || !file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                originalBlob = file;
+                originalSizeEl.textContent = formatFileSize(file.size);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    rotationPreview.src = e.target.result;
+                    rotationPreview.style.display = 'block';
+                    rotationPlaceholder.style.display = 'none';
+                    
+                    originalPreview.src = e.target.result;
+                    originalPreview.style.display = 'block';
+                    originalPlaceholder.style.display = 'none';
+                    
+                    rotateBtn.disabled = false;
+                    
+                    // Load image to get dimensions
+                    originalImage = new Image();
+                    originalImage.onload = function() {
+                        originalDimensionsEl.textContent = `${originalImage.width} × ${originalImage.height} px`;
+                        updateRotationPreview();
+                    };
+                    originalImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '#e6eeff';
+            }
+            
+            function handleDragLeave(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+                handleFileSelect(e);
+            }
+            
+            function rotateImage() {
+                if (!originalImage) {
+                    alert('Please select an image first.');
+                    return;
+                }
+                
+                // Create a canvas for rotation
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Calculate new dimensions based on rotation
+                const radians = rotationAngle * Math.PI / 180;
+                const sin = Math.abs(Math.sin(radians));
+                const cos = Math.abs(Math.cos(radians));
+                
+                let newWidth, newHeight;
+                
+                if (autoCropCheckbox.checked && (rotationAngle % 90 === 0)) {
+                    // For 90° increments, swap dimensions
+                    if (rotationAngle % 180 === 0) {
+                        newWidth = originalImage.width;
+                        newHeight = originalImage.height;
+                    } else {
+                        newWidth = originalImage.height;
+                        newHeight = originalImage.width;
+                    }
+                } else {
+                    // For other angles, calculate bounding box
+                    newWidth = originalImage.width * cos + originalImage.height * sin;
+                    newHeight = originalImage.width * sin + originalImage.height * cos;
+                }
+                
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Set background to white (for transparent areas)
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Translate to center of canvas
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                
+                // Rotate
+                ctx.rotate(radians);
+                
+                // Draw image centered
+                ctx.drawImage(
+                    originalImage,
+                    -originalImage.width / 2,
+                    -originalImage.height / 2,
+                    originalImage.width,
+                    originalImage.height
+                );
+                
+                // Get the rotated image
+                canvas.toBlob(function(blob) {
+                    rotatedBlob = blob;
+                    const rotatedURL = URL.createObjectURL(blob);
+                    
+                    // Update rotated preview
+                    rotatedPreview.src = rotatedURL;
+                    rotatedPreview.style.display = 'block';
+                    rotatedPlaceholder.style.display = 'none';
+                    
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                }, 'image/png');
+            }
+            
+            function downloadImage() {
+                if (!rotatedBlob) {
+                    alert('Please rotate the image first.');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.download = 'rotated-image.png';
+                link.href = URL.createObjectURL(rotatedBlob);
+                link.click();
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) {
+                    return bytes + ' bytes';
+                } else if (bytes < 1048576) {
+                    return (bytes / 1024).toFixed(2) + ' KB';
+                } else {
+                    return (bytes / 1048576).toFixed(2) + ' MB';
+                }
+            }
+            
+            function resetAll() {
+                fileInput.value = '';
+                rotationPreview.src = '';
+                rotationPreview.style.display = 'none';
+                rotationPreview.style.transform = '';
+                rotationPlaceholder.style.display = 'block';
+                originalPreview.src = '';
+                originalPreview.style.display = 'none';
+                originalPlaceholder.style.display = 'block';
+                rotatedPreview.src = '';
+                rotatedPreview.style.display = 'none';
+                rotatedPlaceholder.style.display = 'block';
+                originalSizeEl.textContent = '-';
+                originalDimensionsEl.textContent = '-';
+                rotationInfo.textContent = '0°';
+                rotationSlider.value = 0;
+                angleValue.textContent = '0°';
+                originXSelect.value = 'center';
+                originYSelect.value = 'center';
+                autoCropCheckbox.checked = true;
+                rotateBtn.disabled = true;
+                downloadBtn.disabled = true;
+                originalImage = null;
+                originalBlob = null;
+                rotatedBlob = null;
+                rotationAngle = 0;
+                rotationOrigin = 'center center';
+                dropZone.style.background = '';
+                
+                // Reset to custom preset
+                rotationPresets.forEach(p => p.classList.remove('active'));
+                document.querySelector('[data-angle="custom"]').classList.add('active');
+            }
+            
+            // Initialize the rotator
+            initRotator();
+        });
+    </script>
 </body>
 </html>
-```
