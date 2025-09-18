@@ -1,72 +1,728 @@
-### enlarge.html
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Enlarger</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Enlarger - ProImgResizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .upscale-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .upscale-method {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upscale-method:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upscale-method.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .upscale-method i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .comparison-before {
+            z-index: 1;
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+        }
+        
+        .comparison-after {
+            z-index: 2;
+        }
+        
+        .comparison-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            cursor: ew-resize;
+            z-index: 3;
+            transform: translateX(-50%);
+        }
+        
+        .comparison-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border: 4px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .quality-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .quality-bar {
+            flex: 1;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .quality-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--warning), var(--success));
+            border-radius: 4px;
+            width: 75%;
+        }
+        
+        .dimension-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .dimension-control {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dimension-control label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .dimension-control input {
+            padding: 0.8rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .preset-button {
+            padding: 0.8rem;
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .preset-button:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .processing-notice {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .processing-notice i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-
-  <!-- Header / Navigation -->
-
-  <main class="container mx-auto px-6 mt-10 flex flex-col lg:flex-row">
-
-    <!-- Left Advertisement -->
-    <aside class="hidden lg:block w-1/12 mr-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
-
-    <!-- Tool Content -->
-    <section class="flex-1">
-      <!-- Hero Section -->
-      <div class="bg-white shadow rounded p-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Image Enlarger</h1>
-        <p class="mt-2 text-gray-700 text-lg">Upscale images online without losing quality. Ideal for printing and presentations.</p>
-
-        <!-- Upload / Tool Action Area -->
-        <div class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500">
-          <p class="text-gray-500 mb-4">Drag & drop your image here or click to select</p>
-          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Select Image</button>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-image logo-icon"></i>
+                <div class="logo-text">Pro<span>Img</span>Resizer</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="resize.html">Resize</a></li>
+                    <li><a href="crop.html">Crop</a></li>
+                    <li><a href="compress.html">Compress</a></li>
+                    <li><a href="convert.html">Convert</a></li>
+                    <li><a href="colorpicker.html">Color Picker</a></li>
+                    <li><a href="enlarge.html" class="active">Enlarge</a></li>
+                    <li><a href="flip.html">Flip</a></li>
+                    <li><a href="meme.html">Meme</a></li>
+                    <li><a href="rotate.html">Rotate</a></li>
+                </ul>
+            </nav>
         </div>
-      </div>
+    </header>
 
-      <!-- Features / Benefits -->
-      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="bg-white shadow p-4 rounded text-center">High Quality Enlargement</div>
-        <div class="bg-white shadow p-4 rounded text-center">Fast and Easy</div>
-        <div class="bg-white shadow p-4 rounded text-center">No Installation Needed</div>
-        <div class="bg-white shadow p-4 rounded text-center">Works Anywhere</div>
-        <div class="bg-white shadow p-4 rounded text-center">Privacy Guaranteed</div>
-      </div>
-
-      <!-- Related Tools -->
-      <div class="mt-10">
-        <h2 class="text-2xl font-bold mb-6">Related Tools</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div class="bg-white shadow p-4 rounded text-center">Image Resizer</div>
-          <div class="bg-white shadow p-4 rounded text-center">Compress Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Crop Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Flip Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Rotate Image</div>
-          <div class="bg-white shadow p-4 rounded text-center">Color Picker</div>
-          <div class="bg-white shadow p-4 rounded text-center">Meme Generator</div>
+    <div class="container">
+        <div class="tool-container">
+            <h2 class="section-title">Image Enlarger & Upscaler</h2>
+            <p class="tool-description">Enlarge your images without losing quality using our advanced upscaling algorithms.</p>
+            
+            <div class="upscale-methods">
+                <div class="upscale-method active" data-method="bicubic">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Bicubic</h3>
+                    <p>Standard quality, faster processing</p>
+                </div>
+                <div class="upscale-method" data-method="lanczos">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Lanczos</h3>
+                    <p>Higher quality, sharp details</p>
+                </div>
+                <div class="upscale-method" data-method="ai">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI Enhanced</h3>
+                    <p>Best quality, uses neural networks</p>
+                </div>
+            </div>
+            
+            <div class="tool-ui">
+                <div class="upload-section">
+                    <div class="upload-area" id="drop-zone">
+                        <div class="upload-icon">
+                            <i class="fas fa-expand"></i>
+                        </div>
+                        <p>Drag & Drop your image here</p>
+                        <p>OR</p>
+                        <button class="btn" id="browse-btn">Browse Files</button>
+                        <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div class="dimension-controls">
+                        <div class="dimension-control">
+                            <label for="target-width">Target Width (px)</label>
+                            <input type="number" id="target-width" min="1" placeholder="Original width">
+                        </div>
+                        <div class="dimension-control">
+                            <label for="target-height">Target Height (px)</label>
+                            <input type="number" id="target-height" min="1" placeholder="Original height">
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="maintain-aspect">
+                            <input type="checkbox" id="maintain-aspect" checked>
+                            Maintain aspect ratio
+                        </label>
+                    </div>
+                    
+                    <div class="preset-buttons">
+                        <div class="preset-button" data-scale="1.5">1.5x</div>
+                        <div class="preset-button" data-scale="2">2x</div>
+                        <div class="preset-button" data-scale="3">3x</div>
+                        <div class="preset-button" data-scale="4">4x</div>
+                    </div>
+                    
+                    <div class="quality-indicator">
+                        <span>Quality Estimate:</span>
+                        <div class="quality-bar">
+                            <div class="quality-fill" id="quality-fill"></div>
+                        </div>
+                        <span id="quality-value">Good</span>
+                    </div>
+                    
+                    <div class="processing-notice" id="processing-notice">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Processing your image. This may take a few seconds...</span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="enlarge-btn" disabled><i class="fas fa-expand"></i> Enlarge Image</button>
+                        <button class="btn btn-secondary" id="reset-btn"><i class="fas fa-redo"></i> Reset</button>
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="comparison-slider" id="comparison-slider" style="display: none;">
+                        <img class="comparison-image comparison-before" id="comparison-before" alt="Original image">
+                        <img class="comparison-image comparison-after" id="comparison-after" alt="Enlarged image">
+                        <div class="comparison-handle" id="comparison-handle"></div>
+                    </div>
+                    
+                    <div class="file-info">
+                        <div class="info-row">
+                            <span class="info-label">Original Size:</span>
+                            <span id="original-size">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Original Dimensions:</span>
+                            <span id="original-dimensions">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Enlarged Dimensions:</span>
+                            <span id="enlarged-dimensions">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Scale Factor:</span>
+                            <span id="scale-factor">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="download-btn" disabled><i class="fas fa-download"></i> Download Enlarged Image</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
+        
+        <div class="tool-info">
+            <h3>About Image Enlargement</h3>
+            <p>Enlarging images without losing quality is challenging because it involves adding new pixels to the image. Our upscaling algorithms use advanced techniques to preserve details and minimize artifacts when enlarging your images.</p>
+            
+            <div class="feature-list">
+                <h4>Upscaling Methods:</h4>
+                <ul>
+                    <li><strong>Bicubic Interpolation</strong> - A standard method that provides good quality with reasonable processing time</li>
+                    <li><strong>Lanczos Resampling</strong> - A higher quality algorithm that preserves sharp details better than bicubic</li>
+                    <li><strong>AI Enhancement</strong> - Uses machine learning to predict and add detail for the most natural-looking results</li>
+                </ul>
+                
+                <h4>Best Practices:</h4>
+                <ul>
+                    <li>Start with the highest quality source image possible</li>
+                    <li>Don't enlarge images more than 4x their original size</li>
+                    <li>Use AI enhancement for photographs and complex images</li>
+                    <li>Use Lanczos for images with text or sharp edges</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-    <!-- Right Advertisement -->
-    <aside class="hidden lg:block w-1/12 ml-4">
-      <div class="bg-gray-200 h-[600px] text-center flex items-center justify-center">Ad Space</div>
-    </aside>
+    <footer>
+        <!-- Footer will be populated by JavaScript -->
+    </footer>
 
-  </main>
-
-  <!-- Footer -->
-
+    <script src="script.js"></script>
+    <script>
+        // Enlargement Tool Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const dropZone = document.getElementById('drop-zone');
+            const browseBtn = document.getElementById('browse-btn');
+            const enlargeBtn = document.getElementById('enlarge-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const comparisonSlider = document.getElementById('comparison-slider');
+            const comparisonBefore = document.getElementById('comparison-before');
+            const comparisonAfter = document.getElementById('comparison-after');
+            const comparisonHandle = document.getElementById('comparison-handle');
+            const processingNotice = document.getElementById('processing-notice');
+            const qualityFill = document.getElementById('quality-fill');
+            const qualityValue = document.getElementById('quality-value');
+            
+            const originalSizeEl = document.getElementById('original-size');
+            const originalDimensionsEl = document.getElementById('original-dimensions');
+            const enlargedDimensionsEl = document.getElementById('enlarged-dimensions');
+            const scaleFactorEl = document.getElementById('scale-factor');
+            const targetWidthInput = document.getElementById('target-width');
+            const targetHeightInput = document.getElementById('target-height');
+            const maintainAspectCheckbox = document.getElementById('maintain-aspect');
+            
+            const upscaleMethods = document.querySelectorAll('.upscale-method');
+            const presetButtons = document.querySelectorAll('.preset-button');
+            
+            let originalImage = null;
+            let originalBlob = null;
+            let enlargedBlob = null;
+            let upscaleMethod = 'bicubic';
+            let originalWidth = 0;
+            let originalHeight = 0;
+            let isProcessing = false;
+            let isDraggingHandle = false;
+            
+            // Initialize the tool
+            function initEnlarger() {
+                // File input change event
+                fileInput.addEventListener('change', handleFileSelect);
+                
+                // Drag and drop events
+                dropZone.addEventListener('dragover', handleDragOver);
+                dropZone.addEventListener('dragleave', handleDragLeave);
+                dropZone.addEventListener('drop', handleDrop);
+                
+                // Browse button click
+                browseBtn.addEventListener('click', () => fileInput.click());
+                
+                // Enlarge button click
+                enlargeBtn.addEventListener('click', enlargeImage);
+                
+                // Download button click
+                downloadBtn.addEventListener('click', downloadImage);
+                
+                // Reset button click
+                resetBtn.addEventListener('click', resetAll);
+                
+                // Upscale method selection
+                upscaleMethods.forEach(method => {
+                    method.addEventListener('click', function() {
+                        upscaleMethods.forEach(m => m.classList.remove('active'));
+                        this.classList.add('active');
+                        upscaleMethod = this.dataset.method;
+                        updateQualityEstimate();
+                    });
+                });
+                
+                // Preset buttons
+                presetButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const scale = parseFloat(this.dataset.scale);
+                        applyScalePreset(scale);
+                    });
+                });
+                
+                // Dimension inputs
+                targetWidthInput.addEventListener('input', handleDimensionChange);
+                targetHeightInput.addEventListener('input', handleDimensionChange);
+                
+                // Comparison slider
+                initComparisonSlider();
+                
+                // Set initial quality estimate
+                updateQualityEstimate();
+            }
+            
+            function initComparisonSlider() {
+                comparisonHandle.addEventListener('mousedown', function(e) {
+                    isDraggingHandle = true;
+                    document.addEventListener('mousemove', moveComparisonHandle);
+                    document.addEventListener('mouseup', stopDraggingHandle);
+                    e.preventDefault();
+                });
+                
+                // Touch support for mobile
+                comparisonHandle.addEventListener('touchstart', function(e) {
+                    isDraggingHandle = true;
+                    document.addEventListener('touchmove', moveComparisonHandleTouch);
+                    document.addEventListener('touchend', stopDraggingHandle);
+                    e.preventDefault();
+                });
+            }
+            
+            function moveComparisonHandle(e) {
+                if (!isDraggingHandle) return;
+                
+                const sliderRect = comparisonSlider.getBoundingClientRect();
+                let position = (e.clientX - sliderRect.left) / sliderRect.width;
+                position = Math.max(0, Math.min(1, position));
+                
+                comparisonBefore.style.clipPath = `polygon(0 0, ${position * 100}% 0, ${position * 100}% 100%, 0 100%)`;
+                comparisonHandle.style.left = `${position * 100}%`;
+            }
+            
+            function moveComparisonHandleTouch(e) {
+                if (!isDraggingHandle || !e.touches[0]) return;
+                
+                const sliderRect = comparisonSlider.getBoundingClientRect();
+                let position = (e.touches[0].clientX - sliderRect.left) / sliderRect.width;
+                position = Math.max(0, Math.min(1, position));
+                
+                comparisonBefore.style.clipPath = `polygon(0 0, ${position * 100}% 0, ${position * 100}% 100%, 0 100%)`;
+                comparisonHandle.style.left = `${position * 100}%`;
+            }
+            
+            function stopDraggingHandle() {
+                isDraggingHandle = false;
+                document.removeEventListener('mousemove', moveComparisonHandle);
+                document.removeEventListener('touchmove', moveComparisonHandleTouch);
+                document.removeEventListener('mouseup', stopDraggingHandle);
+                document.removeEventListener('touchend', stopDraggingHandle);
+            }
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0] || e.dataTransfer.files[0];
+                
+                if (!file || !file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                originalBlob = file;
+                originalSizeEl.textContent = formatFileSize(file.size);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    comparisonBefore.src = e.target.result;
+                    
+                    // Load image to get dimensions
+                    originalImage = new Image();
+                    originalImage.onload = function() {
+                        originalWidth = originalImage.width;
+                        originalHeight = originalImage.height;
+                        originalDimensionsEl.textContent = `${originalWidth} × ${originalHeight} px`;
+                        
+                        // Set default target dimensions
+                        targetWidthInput.placeholder = originalWidth;
+                        targetHeightInput.placeholder = originalHeight;
+                        
+                        // Enable enlarge button
+                        enlargeBtn.disabled = false;
+                        
+                        // Show comparison slider
+                        comparisonSlider.style.display = 'block';
+                    };
+                    originalImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            function handleDragOver(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '#e6eeff';
+            }
+            
+            function handleDragLeave(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.background = '';
+                handleFileSelect(e);
+            }
+            
+            function handleDimensionChange() {
+                if (maintainAspectCheckbox.checked && originalWidth > 0 && originalHeight > 0) {
+                    const aspectRatio = originalWidth / originalHeight;
+                    
+                    if (this === targetWidthInput && this.value) {
+                        // Adjust height based on width change
+                        targetHeightInput.value = Math.round(parseInt(this.value) / aspectRatio);
+                    } else if (this === targetHeightInput && this.value) {
+                        // Adjust width based on height change
+                        targetWidthInput.value = Math.round(parseInt(this.value) * aspectRatio);
+                    }
+                }
+                
+                updateQualityEstimate();
+            }
+            
+            function applyScalePreset(scale) {
+                if (!originalImage) {
+                    alert('Please select an image first.');
+                    return;
+                }
+                
+                targetWidthInput.value = Math.round(originalWidth * scale);
+                targetHeightInput.value = Math.round(originalHeight * scale);
+                
+                updateQualityEstimate();
+            }
+            
+            function updateQualityEstimate() {
+                if (!originalImage) return;
+                
+                const targetWidth = targetWidthInput.value ? parseInt(targetWidthInput.value) : originalWidth;
+                const targetHeight = targetHeightInput.value ? parseInt(targetHeightInput.value) : originalHeight;
+                
+                const widthScale = targetWidth / originalWidth;
+                const heightScale = targetHeight / originalHeight;
+                const scale = Math.max(widthScale, heightScale);
+                
+                let qualityPercent = 100;
+                let qualityText = 'Excellent';
+                
+                if (scale > 4) {
+                    qualityPercent = 30;
+                    qualityText = 'Low';
+                } else if (scale > 3) {
+                    qualityPercent = 50;
+                    qualityText = 'Medium';
+                } else if (scale > 2) {
+                    qualityPercent = 70;
+                    qualityText = 'Good';
+                } else if (scale > 1.5) {
+                    qualityPercent = 85;
+                    qualityText = 'Very Good';
+                }
+                
+                // Adjust based on method
+                if (upscaleMethod === 'lanczos') {
+                    qualityPercent = Math.min(100, qualityPercent + 10);
+                } else if (upscaleMethod === 'ai') {
+                    qualityPercent = Math.min(100, qualityPercent + 20);
+                    qualityText = qualityPercent > 80 ? 'Excellent' : 'Good';
+                }
+                
+                qualityFill.style.width = qualityPercent + '%';
+                qualityValue.textContent = qualityText;
+            }
+            
+            function enlargeImage() {
+                if (!originalImage) {
+                    alert('Please select an image first.');
+                    return;
+                }
+                
+                const targetWidth = targetWidthInput.value ? parseInt(targetWidthInput.value) : originalWidth;
+                const targetHeight = targetHeightInput.value ? parseInt(targetHeightInput.value) : originalHeight;
+                
+                if (targetWidth <= originalWidth && targetHeight <= originalHeight) {
+                    alert('Enlargement dimensions must be larger than the original image.');
+                    return;
+                }
+                
+                if (targetWidth > 10000 || targetHeight > 10000) {
+                    alert('Maximum enlargement size is 10000px in each dimension.');
+                    return;
+                }
+                
+                // Show processing notice
+                processingNotice.style.display = 'block';
+                isProcessing = true;
+                enlargeBtn.disabled = true;
+                
+                // Simulate processing time (would be actual processing in a real implementation)
+                setTimeout(() => {
+                    processEnlargement(targetWidth, targetHeight);
+                    processingNotice.style.display = 'none';
+                    isProcessing = false;
+                    enlargeBtn.disabled = false;
+                }, 1500);
+            }
+            
+            function processEnlargement(targetWidth, targetHeight) {
+                // Create a canvas for the enlargement
+                const canvas = document.createElement('canvas');
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Use the selected upscaling method
+                // Note: In a real implementation, this would use different algorithms
+                // For this demo, we're using the browser's built-in scaling
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = upscaleMethod === 'bicubic' ? 'low' : 
+                                          upscaleMethod === 'lanczos' ? 'medium' : 'high';
+                
+                ctx.drawImage(originalImage, 0, 0, targetWidth, targetHeight);
+                
+                // Get the enlarged image
+                canvas.toBlob(function(blob) {
+                    enlargedBlob = blob;
+                    const enlargedURL = URL.createObjectURL(blob);
+                    
+                    // Update comparison
+                    comparisonAfter.src = enlargedURL;
+                    
+                    // Update file info
+                    enlargedDimensionsEl.textContent = `${targetWidth} × ${targetHeight} px`;
+                    
+                    const widthScale = (targetWidth / originalWidth).toFixed(2);
+                    const heightScale = (targetHeight / originalHeight).toFixed(2);
+                    scaleFactorEl.textContent = `${widthScale}x × ${heightScale}x`;
+                    
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                }, 'image/png', 0.95);
+            }
+            
+            function downloadImage() {
+                if (!enlargedBlob) {
+                    alert('Please enlarge the image first.');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.download = 'enlarged-image.png';
+                link.href = URL.createObjectURL(enlargedBlob);
+                link.click();
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) {
+                    return bytes + ' bytes';
+                } else if (bytes < 1048576) {
+                    return (bytes / 1024).toFixed(2) + ' KB';
+                } else {
+                    return (bytes / 1048576).toFixed(2) + ' MB';
+                }
+            }
+            
+            function resetAll() {
+                fileInput.value = '';
+                comparisonBefore.src = '';
+                comparisonAfter.src = '';
+                comparisonSlider.style.display = 'none';
+                originalSizeEl.textContent = '-';
+                originalDimensionsEl.textContent = '-';
+                enlargedDimensionsEl.textContent = '-';
+                scaleFactorEl.textContent = '-';
+                targetWidthInput.value = '';
+                targetHeightInput.value = '';
+                enlargeBtn.disabled = true;
+                downloadBtn.disabled = true;
+                processingNotice.style.display = 'none';
+                originalImage = null;
+                originalBlob = null;
+                enlargedBlob = null;
+                dropZone.style.background = '';
+                
+                // Reset to bicubic method
+                upscaleMethods.forEach(m => m.classList.remove('active'));
+                document.querySelector('[data-method="bicubic"]').classList.add('active');
+                upscaleMethod = 'bicubic';
+                
+                // Reset quality estimate
+                updateQualityEstimate();
+            }
+            
+            // Initialize the enlarger
+            initEnlarger();
+        });
+    </script>
 </body>
-</html
-```
+</html>
